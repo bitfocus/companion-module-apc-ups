@@ -1,5 +1,5 @@
 {
-	"name": "your-module-name",
+	"name": "apc-ups",
 	"version": "0.1.0",
 	"main": "main.js",
 	"scripts": {
@@ -8,10 +8,12 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/bitfocus/companion-module-your-module-name.git"
+		"url": "git+https://github.com/bitfocus/companion-module-apc-ups.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.0.1"
+		"@companion-module/base": "~1.0.1",
+		"apc-ups-snmp": "^0.2.4",
+		"net-snmp": "^3.9.0"
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^0.5.1"
