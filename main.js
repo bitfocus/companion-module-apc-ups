@@ -1,7 +1,7 @@
 const { InstanceBase, Regex, runEntrypoint, InstanceStatus } = require('@companion-module/base')
 const UpgradeScripts = require('./upgrades')
 const { checkVariables, initVariables } = require('./variables')
-const snmp = require('net-snmp')
+const snmp = require('snmp-native')
 
 class ModuleInstance extends InstanceBase {
 	constructor(internal) {
@@ -21,8 +21,6 @@ class ModuleInstance extends InstanceBase {
 		if (this.session) this.session.close()
 		initVariables(this)
 		this.startConnection()
-
-		// this.updateActions() // export actions
 	}
 
 	// When module gets deleted
@@ -57,7 +55,7 @@ class ModuleInstance extends InstanceBase {
 				width: 8,
 				min: 5000,
 				max: 86400000,
-				default: 60000
+				default: 60000,
 			},
 		]
 	}
@@ -67,61 +65,51 @@ class ModuleInstance extends InstanceBase {
 	}
 
 	startConnection() {
-		this.session = snmp.createSession(this.config.host, 'public')
+		let session = new snmp.Session()
+		this.log('debug', 'session' + JSON.stringify(session))
 		this.updateStatus(InstanceStatus.Ok)
 
-		this.session.trap(snmp.TrapType.LinkDown, (error) => {
-			if (error) {
-				this.log('error', 'link down' + error)
-			}
-		})
-		this.pullData()
 		this.puller = setInterval(() => {
-			this.pullData()
+			pullData()
 		}, this.config.pullingTime)
-	}
 
-	pullData() {
-		/**
-		 * oids
-		 * UPS Type 				1.3.6.1.4.1.318.1.1.1.1.1.1.0
-		 * Battery capacity 		1.3.6.1.4.1.318.1.1.1.2.2.1.0
-		 * Battery runtime remain 	1.3.6.1.4.1.318.1.1.1.2.2.3.0
-		 */
-		const oids = ['1.3.6.1.4.1.318.1.1.1.1.1.1.0', '1.3.6.1.4.1.318.1.1.1.2.2.1.0', '1.3.6.1.4.1.318.1.1.1.2.2.3.0']
-
-		this.session.get(oids, (error, varbinds) => {
-			if (error) {
-				this.log('error', error)
-			} else {
-				for (var i = 0; i < varbinds.length; i++) {
-					if (snmp.isVarbindError(varbinds[i])) {
-						this.log('error', snmp.varbindError(varbinds[i]))
+		function pullData() {
+			/**
+			 * oids
+			 * UPS Type 				1.3.6.1.4.1.318.1.1.1.1.1.1.0
+			 * Battery capacity 		1.3.6.1.4.1.318.1.1.1.2.2.1.0
+			 * Battery runtime remain 	1.3.6.1.4.1.318.1.1.1.2.2.3.0
+			 */
+			const oids = [
+				[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 1, 1, 1, 0],
+				[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 1, 0],
+				[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 3, 0],
+			]
+			if (session) {
+				session.getAll({ oids: oids, host: this.config.host }, (error, varbinds) => {
+					if (error) {
+						this.log('error', error)
 					} else {
-						this.log('debug', 'received: '+varbinds[i].oid)
-						switch (varbinds[i].oid) {
-							case '1.3.6.1.4.1.318.1.1.1.1.1.1.0':
-								this.ups_type = varbinds[i].value
-								break;
-							case '1.3.6.1.4.1.318.1.1.1.2.2.1.0':
-								this.battery_capacity = varbinds[i].value
-								break;
-							case '1.3.6.1.4.1.318.1.1.1.2.2.3.0':
-								this.battery_runtime_remain = varbinds[i].value
-								break;
-							default:
-								this.log('debug', varbinds[i].oid + ' = ' + varbinds[i].value)
-								break;
-						}
+						varbinds.forEach((vb) => {
+							if (vb.oid.toString() === '1,3,6,1,4,1,318,1,1,1,1,1,1,0') {
+								this.ups_type = vb.value
+							} else if (vb.oid.toString() === '1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 1, 0') {
+								this.battery_capacity = vb.value
+							} else if (vb.oid.toString() === '1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 3, 0') {
+								this.battery_runtime_remain = vb.value
+							} else {
+								this.log('debug', vb.oid + ' = ' + vb.value)
+							}
+						})
 					}
-				}
+					session.close()
+					this.log('debug', 'ups_type' + this.ups_type)
+					this.log('debug', 'battery_capacity' + this.battery_capacity)
+					this.log('debug', 'battery_runtime_remain' + this.battery_runtime_remain)
+					checkVariables(this)
+				})
 			}
-			this.session.close()
-			this.log('debug','ups_type'+this.ups_type)
-			this.log('debug','battery_capacity'+this.battery_capacity)
-			this.log('debug','battery_runtime_remain'+this.battery_runtime_remain)
-			checkVariables(this)
-		})
+		}
 	}
 }
 
