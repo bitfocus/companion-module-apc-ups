@@ -75,6 +75,7 @@ class ModuleInstance extends InstanceBase {
 				this.log('error', 'link down' + error)
 			}
 		})
+		this.pullData()
 		this.puller = setInterval(() => {
 			this.pullData()
 		}, this.config.pullingTime)
@@ -116,6 +117,9 @@ class ModuleInstance extends InstanceBase {
 				}
 			}
 			this.session.close()
+			this.log('debug','ups_type'+this.ups_type)
+			this.log('debug','battery_capacity'+this.battery_capacity)
+			this.log('debug','battery_runtime_remain'+this.battery_runtime_remain)
 			checkVariables(this)
 		})
 	}
