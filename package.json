@@ -12,8 +12,7 @@
 	},
 	"dependencies": {
 		"@companion-module/base": "~1.0.1",
-		"apc-ups-snmp": "^0.2.4",
-		"net-snmp": "^3.9.0"
+		"apc-ups-snmp": "~0.2.4"
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^0.5.1"

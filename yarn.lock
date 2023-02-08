@@ -532,7 +532,7 @@ ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-apc-ups-snmp@^0.2.4:
+apc-ups-snmp@~0.2.4:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/apc-ups-snmp/-/apc-ups-snmp-0.2.4.tgz#38143c106644be62036baf7ca5d72936a89eab16"
   integrity sha512-jKRV+VhMfMkZgfqmrIzLpT2f0TUz8QeOjBvX3FIz2s0lgyRu7hTFYyKVRFAXzwMtw0YEcE1S+vZig5AFHMbdvA==
@@ -548,11 +548,6 @@ array-union@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/array-union/-/array-union-2.1.0.tgz#b798420adbeb1de828d84acd8a2e23d3efe85e8d"
   integrity sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==
-
-asn1-ber@^1.2.1:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/asn1-ber/-/asn1-ber-1.2.2.tgz#cb8b13f58b537314610c24c560f2353320786822"
-  integrity sha512-CbNem/7hxrjSiOAOOTX4iZxu+0m3jiLqlsERQwwPM1IDR/22M8IPpA1VVndCLw5KtjRYyRODbvAEIfuTogNDng==
 
 asn1@*:
   version "0.2.6"
@@ -1472,14 +1467,6 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-net-snmp@^3.9.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/net-snmp/-/net-snmp-3.9.0.tgz#682d53644c88fd442bf9735b6445eb46120f67e4"
-  integrity sha512-+GtsIp/rqmzdkInDVUVtuzWoE4VnbsENTpDSzjh5N+p72VfR+cHtKt4fmA3KgF709/n4+o1ZQ0Z/1tLezn8ADg==
-  dependencies:
-    asn1-ber "^1.2.1"
-    smart-buffer "^4.1.0"
-
 net-snmp@~1.1.13:
   version "1.1.19"
   resolved "https://registry.yarnpkg.com/net-snmp/-/net-snmp-1.1.19.tgz#8e08af79fb7b226bd595a4d53aa05eac1329b353"
@@ -1834,11 +1821,6 @@ slash@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-4.0.0.tgz#2422372176c4c6c5addb5e2ada885af984b396a7"
   integrity sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==
-
-smart-buffer@^4.1.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.2.0.tgz#6e1d71fa4f18c05f7d0ff216dd16a481d0e8d9ae"
-  integrity sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==
 
 source-map-support@~0.5.20:
   version "0.5.21"
