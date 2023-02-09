@@ -26,7 +26,6 @@ module.exports = {
 			variables['ups_type'] = instance.ups_type
 			variables['battery_capacity'] = instance.battery_capacity
             variables['battery_runtime_remain'] = instance.battery_runtime_remain
-			instance.log('debug', 'variables'+JSON.stringify(variables))
 			instance.setVariableValues(variables)
 		}
 		catch(error) {
