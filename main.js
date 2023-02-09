@@ -1,7 +1,7 @@
 const { InstanceBase, Regex, runEntrypoint, InstanceStatus } = require('@companion-module/base')
 const UpgradeScripts = require('./upgrades')
 const { checkVariables, initVariables } = require('./variables')
-const apcUps = require('apc-ups-snmp')
+const snmp = require('snmp-native')
 
 class ModuleInstance extends InstanceBase {
 	constructor(internal) {
@@ -22,8 +22,6 @@ class ModuleInstance extends InstanceBase {
 		if (this.session) this.session.close()
 		initVariables(this)
 		this.startConnection()
-
-		// this.updateActions() // export actions
 	}
 
 	// When module gets deleted
@@ -68,16 +66,16 @@ class ModuleInstance extends InstanceBase {
 	}
 
 	startConnection() {
-		this.ups = new apcUps({
-			host: this.config.host, // IP Address/Hostname
-		})
+		this.session = new snmp.Session()
+		this.log('debug', 'session' + JSON.stringify(this.session))
 		this.updateStatus(InstanceStatus.Ok)
+		
+		this.pullData()
 
 		this.puller = setInterval(() => {
 			this.pullData()
 		}, this.config.pullingTime)
 	}
-
 	pullData() {
 		/**
 		 * oids
@@ -85,52 +83,36 @@ class ModuleInstance extends InstanceBase {
 		 * Battery capacity 		1.3.6.1.4.1.318.1.1.1.2.2.1.0
 		 * Battery runtime remain 	1.3.6.1.4.1.318.1.1.1.2.2.3.0
 		 */
-		// const oids = ['1.3.6.1.4.1.318.1.1.1.1.1.1.0', '1.3.6.1.4.1.318.1.1.1.2.2.1.0', '1.3.6.1.4.1.318.1.1.1.2.2.3.0']
-		this.ups.getModel((err, model) => {
-			if (err) {
-				this.log('debug', err)
-				return
-			}
-			this.ups_type = model
-			this.log('debug', 'The UPS model is:' + model)
-		})
-		this.ups.getBatteryCapacity((err, percentage) => {
-			if (err) {
-				this.log('debug', err)
-				return
-			}
-			this.battery_capacity = percentage
-			this.log('debug', 'The current battery capacity is:' + percentage)
-		})
-		// this.session.get(oids, (error, varbinds) => {
-		// 	if (error) {
-		// 		this.log('error', error)
-		// 	} else {
-		// 		for (var i = 0; i < varbinds.length; i++) {
-		// 			if (snmp.isVarbindError(varbinds[i])) {
-		// 				this.log('error', snmp.varbindError(varbinds[i]))
-		// 			} else {
-		// 				this.log('debug', 'received: '+varbinds[i].oid)
-		// 				switch (varbinds[i].oid) {
-		// 					case '1.3.6.1.4.1.318.1.1.1.1.1.1.0':
-		// 						this.ups_type = varbinds[i].value
-		// 						break;
-		// 					case '1.3.6.1.4.1.318.1.1.1.2.2.1.0':
-		// 						this.battery_capacity = varbinds[i].value
-		// 						break;
-		// 					case '1.3.6.1.4.1.318.1.1.1.2.2.3.0':
-		// 						this.battery_runtime_remain = varbinds[i].value
-		// 						break;
-		// 					default:
-		// 						this.log('debug', varbinds[i].oid + ' = ' + varbinds[i].value)
-		// 						break;
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// 	this.session.close()
-		// })
-		checkVariables(this)
+		const oids = [
+			[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 1, 1, 1, 0],
+			[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 1, 0],
+			[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 3, 0],
+		]
+		if (this.session) {
+			this.session.getAll({ oids: oids, host: this.config.host }, (error, varbinds) => {
+				if (error) {
+					this.log('error', error)
+				} else {
+					varbinds.forEach((vb) => {
+						if (vb.oid.toString() === '1,3,6,1,4,1,318,1,1,1,1,1,1,0') {
+							this.ups_type = vb.value
+						} else if (vb.oid.toString() === '1,3,6,1,4,1,318,1,1,1,2,2,1,0') {
+							this.battery_capacity = vb.value
+						} else if (vb.oid.toString() === '1,3,6,1,4,1,318,1,1,1,2,2,3,0') {
+							this.battery_runtime_remain = vb.value
+						} else {
+							this.log('debug', vb.oid + ' = ' + vb.value)
+						}
+					})
+				}
+				this.session.close()
+				this.log('debug', 'ups_type' + this.ups_type)
+				this.log('debug', 'battery_capacity' + this.battery_capacity)
+				this.log('debug', 'battery_runtime_remain' + this.battery_runtime_remain)
+				checkVariables(this)
+			})
+		}
+
 	}
 }
 

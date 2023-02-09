@@ -532,13 +532,6 @@ ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-apc-ups-snmp@~0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/apc-ups-snmp/-/apc-ups-snmp-0.2.4.tgz#38143c106644be62036baf7ca5d72936a89eab16"
-  integrity sha512-jKRV+VhMfMkZgfqmrIzLpT2f0TUz8QeOjBvX3FIz2s0lgyRu7hTFYyKVRFAXzwMtw0YEcE1S+vZig5AFHMbdvA==
-  dependencies:
-    net-snmp "~1.1.13"
-
 argparse@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/argparse/-/argparse-2.0.1.tgz#246f50f3ca78a3240f6c997e8a9bd1eac49e4b38"
@@ -548,13 +541,6 @@ array-union@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/array-union/-/array-union-2.1.0.tgz#b798420adbeb1de828d84acd8a2e23d3efe85e8d"
   integrity sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==
-
-asn1@*:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/asn1/-/asn1-0.2.6.tgz#0d3a7bb6e64e02a90c0303b31f292868ea09a08d"
-  integrity sha512-ix/FxPn0MDjeyJ7i/yoHGFt/EX6LyNbxSEhPPXODPL+KB0VPk86UYfL0lMdy+KCnv+fmvIzySwaK5COwqVbWTQ==
-  dependencies:
-    safer-buffer "~2.1.0"
 
 author-regex@^1.0.0:
   version "1.0.0"
@@ -1467,13 +1453,6 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-net-snmp@~1.1.13:
-  version "1.1.19"
-  resolved "https://registry.yarnpkg.com/net-snmp/-/net-snmp-1.1.19.tgz#8e08af79fb7b226bd595a4d53aa05eac1329b353"
-  integrity sha512-XZfgCdmClc/AELY9LUaS7pf6F47p1+YpcriF38AclGWrnxcrH7/3D0mS37hR9PlJ7ednYHxujaYtOYltuO814Q==
-  dependencies:
-    asn1 "*"
-
 node-domexception@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/node-domexception/-/node-domexception-1.0.0.tgz#6888db46a1f71c0b76b3f7555016b63fe64766e5"
@@ -1760,11 +1739,6 @@ safe-buffer@^5.1.0:
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
   integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
 
-safer-buffer@~2.1.0:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
-  integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
-
 schema-utils@^3.1.0, schema-utils@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-3.1.1.tgz#bc74c4b6b6995c1d88f76a8b77bea7219e0c8281"
@@ -1821,6 +1795,11 @@ slash@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-4.0.0.tgz#2422372176c4c6c5addb5e2ada885af984b396a7"
   integrity sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==
+
+snmp-native@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/snmp-native/-/snmp-native-1.2.0.tgz#241e9a0926aa1d4243940a93ef3d938d8dac89db"
+  integrity sha512-JIyuLX3bQmuAI4gHztHSQd3M/M2hqgLhiHBZYEk8YnYRJ2ooxqwON4gUQfgp/WCZVDca4tIX3vFJgv6lz5iY+g==
 
 source-map-support@~0.5.20:
   version "0.5.21"
