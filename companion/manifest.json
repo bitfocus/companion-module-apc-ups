@@ -2,7 +2,7 @@
 	"id": "apc-ups",
 	"name": "apc-ups",
 	"shortname": "APC UPS Monitor",
-	"description": "Monitors battery life",
+	"description": "Monitors battery life and other things",
 	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-apc-ups.git",

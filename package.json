@@ -13,6 +13,7 @@
 	"dependencies": {
 		"@companion-module/base": "~1.0.1",
 		"snmp-native": "^1.2.0"
+
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^0.5.1"

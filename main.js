@@ -9,6 +9,7 @@ class ModuleInstance extends InstanceBase {
 
 		// Assign the methods from the listed files to this class
 		this.puller = undefined
+		this.ups = undefined
 		this.ups_type = ''
 		this.battery_capacity = ''
 		this.battery_runtime_remain = ''
@@ -70,6 +71,7 @@ class ModuleInstance extends InstanceBase {
 		this.updateStatus(InstanceStatus.Ok)
 		
 		this.pullData()
+
 		this.puller = setInterval(() => {
 			this.pullData()
 		}, this.config.pullingTime)
@@ -110,6 +112,7 @@ class ModuleInstance extends InstanceBase {
 				checkVariables(this)
 			})
 		}
+
 	}
 }
 
