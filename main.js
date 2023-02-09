@@ -1,6 +1,7 @@
 const { InstanceBase, Regex, runEntrypoint, InstanceStatus } = require('@companion-module/base')
 const UpgradeScripts = require('./upgrades')
 const { checkVariables, initVariables } = require('./variables')
+// const { getPresets } = require('./presets')
 const snmp = require('snmp-native')
 
 class ModuleInstance extends InstanceBase {
@@ -21,6 +22,8 @@ class ModuleInstance extends InstanceBase {
 		if (this.puller) clearInterval(this.puller)
 		if (this.session) this.session.close()
 		initVariables(this)
+		// this.setPresetDefinitions(getPresets())
+
 		this.startConnection()
 	}
 
@@ -68,8 +71,8 @@ class ModuleInstance extends InstanceBase {
 	startConnection() {
 		this.session = new snmp.Session()
 		this.log('debug', 'session' + JSON.stringify(this.session))
-		this.updateStatus(InstanceStatus.Ok)
-		
+		this.updateStatus(InstanceStatus.UnknownWarning)
+
 		this.pullData()
 
 		this.puller = setInterval(() => {
@@ -93,6 +96,7 @@ class ModuleInstance extends InstanceBase {
 				if (error) {
 					this.log('error', error)
 				} else {
+					this.updateStatus(InstanceStatus.Ok)
 					varbinds.forEach((vb) => {
 						if (vb.oid.toString() === '1,3,6,1,4,1,318,1,1,1,1,1,1,0') {
 							this.ups_type = vb.value
@@ -106,13 +110,9 @@ class ModuleInstance extends InstanceBase {
 					})
 				}
 				this.session.close()
-				this.log('debug', 'ups_type' + this.ups_type)
-				this.log('debug', 'battery_capacity' + this.battery_capacity)
-				this.log('debug', 'battery_runtime_remain' + this.battery_runtime_remain)
 				checkVariables(this)
 			})
 		}
-
 	}
 }
 
