@@ -65,50 +65,50 @@ class ModuleInstance extends InstanceBase {
 	}
 
 	startConnection() {
-		let session = new snmp.Session()
-		this.log('debug', 'session' + JSON.stringify(session))
+		this.session = new snmp.Session()
+		this.log('debug', 'session' + JSON.stringify(this.session))
 		this.updateStatus(InstanceStatus.Ok)
-
+		
+		this.pullData()
 		this.puller = setInterval(() => {
-			pullData()
+			this.pullData()
 		}, this.config.pullingTime)
-
-		function pullData() {
-			/**
-			 * oids
-			 * UPS Type 				1.3.6.1.4.1.318.1.1.1.1.1.1.0
-			 * Battery capacity 		1.3.6.1.4.1.318.1.1.1.2.2.1.0
-			 * Battery runtime remain 	1.3.6.1.4.1.318.1.1.1.2.2.3.0
-			 */
-			const oids = [
-				[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 1, 1, 1, 0],
-				[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 1, 0],
-				[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 3, 0],
-			]
-			if (session) {
-				session.getAll({ oids: oids, host: this.config.host }, (error, varbinds) => {
-					if (error) {
-						this.log('error', error)
-					} else {
-						varbinds.forEach((vb) => {
-							if (vb.oid.toString() === '1,3,6,1,4,1,318,1,1,1,1,1,1,0') {
-								this.ups_type = vb.value
-							} else if (vb.oid.toString() === '1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 1, 0') {
-								this.battery_capacity = vb.value
-							} else if (vb.oid.toString() === '1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 3, 0') {
-								this.battery_runtime_remain = vb.value
-							} else {
-								this.log('debug', vb.oid + ' = ' + vb.value)
-							}
-						})
-					}
-					session.close()
-					this.log('debug', 'ups_type' + this.ups_type)
-					this.log('debug', 'battery_capacity' + this.battery_capacity)
-					this.log('debug', 'battery_runtime_remain' + this.battery_runtime_remain)
-					checkVariables(this)
-				})
-			}
+	}
+	pullData() {
+		/**
+		 * oids
+		 * UPS Type 				1.3.6.1.4.1.318.1.1.1.1.1.1.0
+		 * Battery capacity 		1.3.6.1.4.1.318.1.1.1.2.2.1.0
+		 * Battery runtime remain 	1.3.6.1.4.1.318.1.1.1.2.2.3.0
+		 */
+		const oids = [
+			[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 1, 1, 1, 0],
+			[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 1, 0],
+			[1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 2, 2, 3, 0],
+		]
+		if (this.session) {
+			this.session.getAll({ oids: oids, host: this.config.host }, (error, varbinds) => {
+				if (error) {
+					this.log('error', error)
+				} else {
+					varbinds.forEach((vb) => {
+						if (vb.oid.toString() === '1,3,6,1,4,1,318,1,1,1,1,1,1,0') {
+							this.ups_type = vb.value
+						} else if (vb.oid.toString() === '1,3,6,1,4,1,318,1,1,1,2,2,1,0') {
+							this.battery_capacity = vb.value
+						} else if (vb.oid.toString() === '1,3,6,1,4,1,318,1,1,1,2,2,3,0') {
+							this.battery_runtime_remain = vb.value
+						} else {
+							this.log('debug', vb.oid + ' = ' + vb.value)
+						}
+					})
+				}
+				this.session.close()
+				this.log('debug', 'ups_type' + this.ups_type)
+				this.log('debug', 'battery_capacity' + this.battery_capacity)
+				this.log('debug', 'battery_runtime_remain' + this.battery_runtime_remain)
+				checkVariables(this)
+			})
 		}
 	}
 }
