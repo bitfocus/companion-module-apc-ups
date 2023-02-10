@@ -32,8 +32,8 @@ export function GetPresetList(): CompanionPresetDefinitions {
 		style: {
 			text: `UPS BAT\\n$(APC_UPS_Monitor:battery_capacity) %`, 
 			size: 'auto',
-			color: combineRgb(0, 153, 0),
-			bgcolor: combineRgb(0, 0, 0),
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 153, 0),
 		},
 		steps: [
 			{
