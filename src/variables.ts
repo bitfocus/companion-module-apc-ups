@@ -1,40 +1,37 @@
-import { CompanionVariableValues } from "@companion-module/base"
-import { DeviceConfig } from "./config"
-import { InstanceBaseExt } from "./utils"
+import type { CompanionVariableDefinition, CompanionVariableValues } from '@companion-module/base'
+import type { DeviceConfig } from './config.js'
+import type { InstanceBaseExt } from './utils.js'
 
-const { InstanceStatus } = require('@companion-module/base')
+import { InstanceStatus } from '@companion-module/base'
 
-module.exports = {
-	initVariables(instance: InstanceBaseExt<DeviceConfig>): void {
-		let variables = []
+export function initVariables(instance: InstanceBaseExt<DeviceConfig>): void {
+	const variables: CompanionVariableDefinition[] = []
 
-		variables.push({ variableId: 'ups_type', name: 'UPS Type' })
-		variables.push({ variableId: 'battery_capacity', name: 'Battery capacity' })
-		variables.push({ variableId: 'battery_runtime_remain', name: 'Battery runtime remain' })
+	variables.push({ variableId: 'ups_type', name: 'UPS Type' })
+	variables.push({ variableId: 'battery_capacity', name: 'Battery capacity' })
+	variables.push({ variableId: 'battery_runtime_remain', name: 'Battery runtime remain' })
 
-		instance.setVariableDefinitions(variables)
+	instance.setVariableDefinitions(variables)
 
-		let startValues:CompanionVariableValues= {}
+	const startValues: CompanionVariableValues = {}
 
-		startValues['ups_type'] = ''
-		startValues['battery_capacity'] = ''
-		startValues['battery_runtime_remain'] = ''
+	startValues['ups_type'] = ''
+	startValues['battery_capacity'] = ''
+	startValues['battery_runtime_remain'] = ''
 
-		instance.setVariableValues(startValues)
-	},
+	instance.setVariableValues(startValues)
+}
 
-	checkVariables(instance: InstanceBaseExt<DeviceConfig>) {
-		try {
-			let variables:CompanionVariableValues = {}
-		
-			variables['ups_type'] = instance.APC_Data.ups_type
-			variables['battery_capacity'] = instance.APC_Data.battery_capacity
-            variables['battery_runtime_remain'] = instance.APC_Data.battery_runtime_remain
-			instance.setVariableValues(variables)
-		}
-		catch(error: any) {
-			instance.updateStatus(InstanceStatus.UnknownWarning)
-			instance.log('error',  `Error checking variables: ${error.toString()}`);
-		}
+export function checkVariables(instance: InstanceBaseExt<DeviceConfig>): void {
+	try {
+		const variables: CompanionVariableValues = {}
+
+		variables['ups_type'] = instance.APC_Data.ups_type
+		variables['battery_capacity'] = instance.APC_Data.battery_capacity
+		variables['battery_runtime_remain'] = instance.APC_Data.battery_runtime_remain
+		instance.setVariableValues(variables)
+	} catch (error: any) {
+		instance.updateStatus(InstanceStatus.UnknownWarning)
+		instance.log('error', `Error checking variables: ${error.toString()}`)
 	}
 }

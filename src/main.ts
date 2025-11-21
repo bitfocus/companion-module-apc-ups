@@ -1,18 +1,19 @@
-import { InstanceBase, SomeCompanionConfigField } from '@companion-module/base'
-import { DeviceConfig } from './config'
-import { APS_Data_Interface } from './utils'
+import { InstanceBase, type SomeCompanionConfigField } from '@companion-module/base'
+import { type APS_Data_Interface } from './utils.js'
 
-const { runEntrypoint, InstanceStatus } = require('@companion-module/base')
-const { DeviceConfig, GetConfigFields } = require('./config')
-const { checkVariables, initVariables } = require('./variables')
-const { GetPresetList } = require('./presets')
-const snmp = require('snmp-native')
+import { runEntrypoint, InstanceStatus } from '@companion-module/base'
+import { type DeviceConfig, GetConfigFields } from './config.js'
+import { checkVariables, initVariables } from './variables.js'
+import { UpgradeScripts } from './upgrades.js'
+import { GetPresetList } from './presets.js'
+import snmp from 'snmp-native'
 
 class ModuleInstance extends InstanceBase<DeviceConfig> {
-	private puller: NodeJS.Timer | undefined
+	private puller: NodeJS.Timeout | undefined
 	private session: any
 	public config: DeviceConfig = {
 		host: '',
+		community: 'public',
 		pullingTime: 60000,
 	}
 
@@ -28,6 +29,7 @@ class ModuleInstance extends InstanceBase<DeviceConfig> {
 
 	public async init(config: DeviceConfig): Promise<void> {
 		this.config = config
+		process.title = this.label
 		await this.configUpdated(this.config)
 
 		if (this.puller) clearInterval(this.puller)
@@ -53,6 +55,7 @@ class ModuleInstance extends InstanceBase<DeviceConfig> {
 	 */
 	public async configUpdated(config: DeviceConfig): Promise<void> {
 		this.config = config
+		process.title = this.label
 		if (this.puller) clearInterval(this.puller)
 		this.startConnection()
 	}
@@ -92,7 +95,7 @@ class ModuleInstance extends InstanceBase<DeviceConfig> {
 		]
 		this.log('debug', 'Pulling, can take up to a minute')
 		this.session.getAll(
-			{ oids: oids, host: this.config.host },
+			{ oids: oids, host: this.config.host, community: this.config.community },
 			(error: any, varbinds: any) => {
 				if (error) {
 					this.log('error', error)
@@ -114,10 +117,10 @@ class ModuleInstance extends InstanceBase<DeviceConfig> {
 					})
 				}
 				checkVariables(this)
-			}
+			},
 		)
 		// this.session.close()
 	}
 }
 
-runEntrypoint(ModuleInstance, [])
+runEntrypoint(ModuleInstance, UpgradeScripts)
