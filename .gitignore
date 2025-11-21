@@ -7,4 +7,4 @@ package-lock.json
 DEBUG-*
 .vscode/
 .yarn/
-/dist
+dist/
