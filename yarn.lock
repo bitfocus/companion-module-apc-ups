@@ -367,15 +367,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:^8.18.1":
-  version: 8.18.1
-  resolution: "@types/ws@npm:8.18.1"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10c0/61aff1129143fcc4312f083bc9e9e168aa3026b7dd6e70796276dcfb2c8211c4292603f9c4864fae702f2ed86e4abd4d38aa421831c2fd7f856c931a481afbab
-  languageName: node
-  linkType: hard
-
 "@typescript-eslint/eslint-plugin@npm:8.47.0":
   version: 8.47.0
   resolution: "@typescript-eslint/eslint-plugin@npm:8.47.0"
@@ -827,7 +818,6 @@ __metadata:
     "@companion-module/tools": "npm:^2.4.2"
     "@types/node": "npm:^22.19.1"
     "@types/snmp-native": "npm:^1.2.5"
-    "@types/ws": "npm:^8.18.1"
     eslint: "npm:^9.39.1"
     husky: "npm:^9.1.7"
     lint-staged: "npm:^16.2.7"

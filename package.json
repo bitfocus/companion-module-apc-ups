@@ -26,7 +26,6 @@
 		"@companion-module/tools": "^2.4.2",
 		"@types/node": "^22.19.1",
 		"@types/snmp-native": "^1.2.5",
-		"@types/ws": "^8.18.1",
 		"eslint": "^9.39.1",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.2.7",

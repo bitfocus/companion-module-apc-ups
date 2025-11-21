@@ -8,6 +8,6 @@
 		"paths": {
 			"*": ["./node_modules/*"]
 		},
-		"types": ["jest", "node"]
+		"types": ["node" /* , "jest" ] // uncomment this if using jest */]
 	}
 }
