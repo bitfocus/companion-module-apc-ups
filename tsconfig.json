@@ -3,6 +3,11 @@
 	"include": ["src/**/*.ts"],
 	"exclude": ["node_modules/**"],
 	"compilerOptions": {
-		"types": ["jest", "node"]
+		"outDir": "./dist",
+		"baseUrl": "./",
+		"paths": {
+			"*": ["./node_modules/*"]
+		},
+		"types": ["node" /* , "jest" ] // uncomment this if using jest */]
 	}
 }
