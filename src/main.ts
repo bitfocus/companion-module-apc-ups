@@ -10,7 +10,7 @@ import snmp from 'snmp-native'
 
 class ModuleInstance extends InstanceBase<DeviceConfig> {
 	private puller: NodeJS.Timeout | undefined
-	private session: any
+	private session: snmp.Session = new snmp.Session()
 	public config: DeviceConfig = {
 		host: '',
 		community: 'public',
@@ -28,26 +28,19 @@ class ModuleInstance extends InstanceBase<DeviceConfig> {
 	}
 
 	public async init(config: DeviceConfig): Promise<void> {
-		this.config = config
-		process.title = this.label
-		await this.configUpdated(this.config)
-
-		if (this.puller) clearInterval(this.puller)
-
 		initVariables(this)
 		this.setPresetDefinitions(GetPresetList())
-
-		this.startConnection()
+		await this.configUpdated(config)
 	}
 
 	// When module gets deleted
 	public async destroy(): Promise<void> {
 		if (this.puller) {
-			delete this.puller
 			clearInterval(this.puller)
+			delete this.puller
 		}
-		this.log('debug', 'destroy')
-		return
+		this.log('debug', `destroy ${this.id}:${this.label}`)
+		this.session.close()
 	}
 
 	/**
@@ -57,7 +50,12 @@ class ModuleInstance extends InstanceBase<DeviceConfig> {
 		this.config = config
 		process.title = this.label
 		if (this.puller) clearInterval(this.puller)
-		this.startConnection()
+		if (config.host) {
+			this.startConnection()
+		} else {
+			this.updateStatus(InstanceStatus.BadConfig)
+			this.log('error', 'No Host configured')
+		}
 	}
 
 	/**
@@ -67,21 +65,15 @@ class ModuleInstance extends InstanceBase<DeviceConfig> {
 		return GetConfigFields()
 	}
 
-	startConnection() {
-		// Only create a new session when needed
-		if (!this.session) {
-			// Create new session
-			this.session = new snmp.Session()
-			this.log('debug', 'session created: ' + JSON.stringify(this.session))
-		}
-		this.updateStatus(InstanceStatus.UnknownWarning)
-
+	private startConnection() {
+		this.updateStatus(InstanceStatus.Connecting)
+		this.pullData()
 		this.puller = setInterval(() => {
 			this.pullData()
 		}, this.config.pullingTime)
 	}
 
-	pullData() {
+	private pullData() {
 		/**
 		 * oids
 		 * UPS Type 				1.3.6.1.4.1.318.1.1.1.1.1.1.0
@@ -95,13 +87,18 @@ class ModuleInstance extends InstanceBase<DeviceConfig> {
 		]
 		this.log('debug', 'Pulling, can take up to a minute')
 		this.session.getAll(
-			{ oids: oids, host: this.config.host, community: this.config.community },
-			(error: any, varbinds: any) => {
+			{
+				oids: oids,
+				host: this.config.host,
+				community: this.config.community,
+				combinedTimeout: this.config.pullingTime,
+			},
+			(error: Error | null, varbinds: snmp.VarBind[]) => {
 				if (error) {
-					this.log('error', error)
+					this.log('error', JSON.stringify(error))
 				} else {
 					this.updateStatus(InstanceStatus.Ok)
-					varbinds.forEach((vb: { oid: string; value: string | number }) => {
+					varbinds.forEach((vb: snmp.VarBind) => {
 						this.log('debug', vb.oid + ' = ' + vb.value)
 						if (vb.oid.toString() === '1,3,6,1,4,1,318,1,1,1,1,1,1,0') {
 							this.APC_Data.ups_type = vb.value as string
