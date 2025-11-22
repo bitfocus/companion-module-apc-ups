@@ -8,7 +8,7 @@ import { UpgradeScripts } from './upgrades.js'
 import { GetPresetList } from './presets.js'
 import snmp from 'snmp-native'
 
-class ModuleInstance extends InstanceBase<DeviceConfig> {
+export class ModuleInstance extends InstanceBase<DeviceConfig> {
 	private puller: NodeJS.Timeout | undefined
 	private session: snmp.Session = new snmp.Session()
 	public config: DeviceConfig = {

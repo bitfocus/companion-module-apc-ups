@@ -1,10 +1,9 @@
 import type { CompanionVariableDefinition, CompanionVariableValues } from '@companion-module/base'
-import type { DeviceConfig } from './config.js'
-import type { InstanceBaseExt } from './utils.js'
+import type { ModuleInstance } from './main.js'
 
 import { InstanceStatus } from '@companion-module/base'
 
-export function initVariables(instance: InstanceBaseExt<DeviceConfig>): void {
+export function initVariables(instance: ModuleInstance): void {
 	const variables: CompanionVariableDefinition[] = []
 
 	variables.push({ variableId: 'ups_type', name: 'UPS Type' })
@@ -22,7 +21,7 @@ export function initVariables(instance: InstanceBaseExt<DeviceConfig>): void {
 	instance.setVariableValues(startValues)
 }
 
-export function checkVariables(instance: InstanceBaseExt<DeviceConfig>): void {
+export function checkVariables(instance: ModuleInstance): void {
 	try {
 		const variables: CompanionVariableValues = {}
 
