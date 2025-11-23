@@ -1,34 +1,24 @@
-import type { CompanionVariableDefinition, CompanionVariableValues } from '@companion-module/base'
+import { type CompanionVariableDefinition, InstanceStatus } from '@companion-module/base'
 import type { ModuleInstance } from './main.js'
-
-import { InstanceStatus } from '@companion-module/base'
+import { UPS_OID_VARIABLE_NAMES } from './oids.js'
 
 export function initVariables(instance: ModuleInstance): void {
 	const variables: CompanionVariableDefinition[] = []
-
-	variables.push({ variableId: 'ups_type', name: 'UPS Type' })
-	variables.push({ variableId: 'battery_capacity', name: 'Battery capacity' })
-	variables.push({ variableId: 'battery_runtime_remain', name: 'Battery runtime remain' })
+	for (const [k, v] of Object.entries(UPS_OID_VARIABLE_NAMES) as [
+		keyof typeof UPS_OID_VARIABLE_NAMES,
+		(typeof UPS_OID_VARIABLE_NAMES)[keyof typeof UPS_OID_VARIABLE_NAMES],
+	][]) {
+		variables.push({ variableId: k, name: v })
+	}
 
 	instance.setVariableDefinitions(variables)
 
-	const startValues: CompanionVariableValues = {}
-
-	startValues['ups_type'] = ''
-	startValues['battery_capacity'] = ''
-	startValues['battery_runtime_remain'] = ''
-
-	instance.setVariableValues(startValues)
+	instance.setVariableValues(instance.APC_Data)
 }
 
 export function checkVariables(instance: ModuleInstance): void {
 	try {
-		const variables: CompanionVariableValues = {}
-
-		variables['ups_type'] = instance.APC_Data.ups_type
-		variables['battery_capacity'] = instance.APC_Data.battery_capacity
-		variables['battery_runtime_remain'] = instance.APC_Data.battery_runtime_remain
-		instance.setVariableValues(variables)
+		instance.setVariableValues(instance.APC_Data)
 	} catch (error: any) {
 		instance.updateStatus(InstanceStatus.UnknownWarning)
 		instance.log('error', `Error checking variables: ${error.toString()}`)
