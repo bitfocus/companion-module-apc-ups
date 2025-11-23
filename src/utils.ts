@@ -1,5 +1,24 @@
-export interface APS_Data_Interface {
+/* export interface APS_Data_Interface {
 	ups_type: string
 	battery_capacity: number
 	battery_runtime_remain: number
-}
+	battery_temperature: number
+	battery_replace: boolean
+	battery_status: string
+	battery_time_on_battery: number
+	battery_voltage: number
+	input_voltage: number
+	input_frequency: number
+	last_transfer_reason: string
+	output_active_power: number
+	output_voltage: number
+	output_frequency: number
+	output_load_percent: number
+	output_current: number
+	output_status: string
+	output_efficiency: number
+	output_energy_use: number
+	diagnostic_comms: boolean
+	self_test_result: string
+	self_test_date: string
+} */
