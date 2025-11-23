@@ -9,6 +9,7 @@ import {
 	UPS_OID_VALUES,
 	upsOidDataTransforms,
 	isUpsOidNameKey,
+	createDefaultUPSData,
 } from './oids.js'
 import snmp from 'snmp-native'
 
@@ -21,30 +22,7 @@ export class ModuleInstance extends InstanceBase<DeviceConfig> {
 		pullingTime: 60000,
 	}
 
-	public APC_Data: UPS_Oid_Data_Interface = {
-		ups_type: '',
-		battery_capacity: 0,
-		battery_runtime_remain: 0,
-		battery_temperature: 0,
-		battery_replace: false,
-		battery_status: '',
-		battery_time_on_battery: 0,
-		battery_voltage: 0,
-		input_voltage: 0,
-		input_frequency: 0,
-		last_transfer_reason: '',
-		output_active_power: 0,
-		output_voltage: 0,
-		output_frequency: 0,
-		output_load_percent: 0,
-		output_current: 0,
-		output_efficiency: 0,
-		output_energy_use: 0,
-		output_status: '',
-		diagnostic_comms: false,
-		self_test_result: '',
-		self_test_date: '',
-	}
+	public APC_Data: UPS_Oid_Data_Interface = createDefaultUPSData()
 
 	constructor(internal: unknown) {
 		super(internal)
@@ -95,10 +73,17 @@ export class ModuleInstance extends InstanceBase<DeviceConfig> {
 			this.pullData()
 		}, this.config.pullingTime)
 	}
+
+	/**
+	 * Type-safe setter for APC_Data fields
+	 */
 	private setUpsField<K extends keyof UPS_Oid_Data_Interface>(key: K, value: UPS_Oid_Data_Interface[K]) {
 		this.APC_Data[key] = value
 	}
 
+	/**
+	 * Poll the UPS for all OID values and update variables
+	 */
 	private pullData() {
 		this.log('debug', 'Pulling, can take up to a minute')
 		this.session.getAll(
