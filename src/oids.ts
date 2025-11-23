@@ -36,7 +36,7 @@ export const UPS_OIDS = {
 	diagnostic_comms: [1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 8, 1, 0], // Diagnostic Comms
 	self_test_result: [1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 7, 2, 3, 0], // Self Test - Last Result
 	self_test_date: [1, 3, 6, 1, 4, 1, 318, 1, 1, 1, 7, 2, 4, 0], // Self Test - Last Date
-} as const
+} as const satisfies Record<string, number[]>
 
 /**
  *  Data transform functions for each OID by name
