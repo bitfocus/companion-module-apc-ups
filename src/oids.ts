@@ -153,7 +153,8 @@ export const UPS_OID_STRING_VALUES = Object.values(UPS_OID_STRINGS) // Array of 
 /**
  *  All OIDs transformed to [oid: string]: string object to lookup name by OID string
  * */
-export const UPS_OID_NAMES = reverseObject(UPS_OID_STRINGS) satisfies Record<string, keyof UPS_Oid_Data_Interface> // Map OID string representations to their names
+
+export const UPS_OID_NAMES = reverseObject(UPS_OID_STRINGS) satisfies Record<string, UpsFieldName>
 
 /**
  *  Typeguard to check if a string is a valid UPS OID name key
@@ -177,4 +178,22 @@ export type UPS_Oid_Data_Interface = {
 
 export function isUpsOidKey(key: string): key is keyof typeof upsOidDataTransforms {
 	return key in upsOidDataTransforms
+}
+
+export function createDefaultUPSData(): UPS_Oid_Data_Interface {
+	// collect as Partial with base types
+	const out: Partial<Record<keyof UPS_Oid_Data_Interface, string | number | boolean>> = {}
+
+	for (const k of Object.keys(upsOidDataTransforms) as Array<keyof UPS_Oid_Data_Interface>) {
+		// get a sample runtime return value to detect base type
+		const sample = upsOidDataTransforms[k]({ value: undefined } as any)
+		const t = typeof sample
+
+		if (t === 'string') out[k] = ''
+		else if (t === 'number') out[k] = 0
+		else out[k] = false
+	}
+
+	// single assertion here prevents per-key "never" errors
+	return out as UPS_Oid_Data_Interface
 }
