@@ -66,7 +66,7 @@ export const upsOidDataTransforms = {
 	self_test_date: (vb: snmp.VarBind): string => String(vb.value), // Self Test - Last Date
 } satisfies Record<UpsFieldName, (vb: snmp.VarBind) => string | number | boolean>
 
-export const UPS_OID_VARIABLE_NAMES: Record<UpsFieldName, string> = {
+export const UPS_OID_VARIABLE_NAMES = {
 	ups_type: 'UPS Type',
 	battery_capacity: 'Battery capacity (%)',
 	battery_runtime_remain: 'Battery runtime remain (S)',
@@ -89,7 +89,7 @@ export const UPS_OID_VARIABLE_NAMES: Record<UpsFieldName, string> = {
 	diagnostic_comms: 'SNMP agent to UPS comms OK',
 	self_test_result: 'Self test result',
 	self_test_date: 'Self test date',
-} as const
+} as const satisfies Record<UpsFieldName, string>
 
 // Convert number to string
 type NumToStr<N extends number> = `${N}`
