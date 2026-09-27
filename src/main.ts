@@ -1,8 +1,8 @@
-import { InstanceBase, InstanceStatus, runEntrypoint, type SomeCompanionConfigField } from '@companion-module/base'
+import { InstanceBase, InstanceStatus, type SomeCompanionConfigField } from '@companion-module/base'
 import { type DeviceConfig, GetConfigFields } from './config.js'
-import { checkVariables, initVariables } from './variables.js'
+import { checkVariables, initVariables, type VariablesSchema } from './variables.js'
 import { UpgradeScripts } from './upgrades.js'
-import { GetPresetList } from './presets.js'
+import { UpdatePresets } from './presets.js'
 import {
 	UPS_OID_NAMES,
 	type UPS_Oid_Data_Interface,
@@ -13,7 +13,17 @@ import {
 } from './oids.js'
 import snmp from 'snmp-native'
 
-export class ModuleInstance extends InstanceBase<DeviceConfig> {
+export type ModuleTypes = {
+	config: DeviceConfig
+	secrets: undefined
+	actions: Record<string, never>
+	feedbacks: Record<string, never>
+	variables: VariablesSchema
+}
+
+export { UpgradeScripts }
+
+export default class ModuleInstance extends InstanceBase<ModuleTypes> {
 	private puller: NodeJS.Timeout | undefined
 	private session: snmp.Session = new snmp.Session()
 	public config: DeviceConfig = {
@@ -30,7 +40,7 @@ export class ModuleInstance extends InstanceBase<DeviceConfig> {
 
 	public async init(config: DeviceConfig): Promise<void> {
 		initVariables(this)
-		this.setPresetDefinitions(GetPresetList())
+		UpdatePresets(this)
 		await this.configUpdated(config)
 	}
 
@@ -117,5 +127,3 @@ export class ModuleInstance extends InstanceBase<DeviceConfig> {
 		// this.session.close()
 	}
 }
-
-runEntrypoint(ModuleInstance, UpgradeScripts)

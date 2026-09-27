@@ -1,51 +1,39 @@
-import {
-	combineRgb,
-	type CompanionButtonPresetDefinition,
-	type CompanionPresetDefinitions,
-} from '@companion-module/base'
+import { combineRgb, type CompanionPresetDefinitions, type CompanionPresetSection } from '@companion-module/base'
+import type ModuleInstance from './main.js'
+import type { ModuleTypes } from './main.js'
 
-interface CompanionPresetExt extends CompanionButtonPresetDefinition {
-	feedbacks: Array<
-		{
-			// feedbackId: FeedbackId
-		} & CompanionButtonPresetDefinition['feedbacks'][0]
-	>
-	steps: Array<{
-		down: Array<
-			{
-				// actionId: ActionId
-			} & CompanionButtonPresetDefinition['steps'][0]['down'][0]
-		>
-		up: Array<
-			{
-				// actionId: ActionId
-			} & CompanionButtonPresetDefinition['steps'][0]['up'][0]
-		>
-	}>
-}
-interface CompanionPresetDefinitionsExt {
-	[id: string]: CompanionPresetExt | undefined
+export enum PresetId {
+	Battery = 'battery',
 }
 
-export function GetPresetList(): CompanionPresetDefinitions {
-	const presets: CompanionPresetDefinitionsExt = {}
-	presets[`battery`] = {
-		type: 'button',
-		category: 'Status',
-		name: `Battery status`,
-		style: {
-			text: `UPS BAT\\n$(APC_UPS_Monitor:battery_capacity) %`,
-			size: 'auto',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(0, 153, 0),
-		},
-		steps: [
-			{
-				down: [],
-				up: [],
+export function UpdatePresets(self: ModuleInstance): void {
+	const presets: CompanionPresetDefinitions<ModuleTypes> = {
+		[PresetId.Battery]: {
+			type: 'simple',
+			name: `Battery status`,
+			style: {
+				text: `UPS BAT\\n$(APC_UPS_Monitor:battery_capacity) %`,
+				size: 'auto',
+				color: combineRgb(255, 255, 255),
+				bgcolor: combineRgb(0, 153, 0),
 			},
-		],
-		feedbacks: [],
+			steps: [
+				{
+					down: [],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		},
 	}
-	return presets
+
+	const structure: CompanionPresetSection<ModuleTypes>[] = [
+		{
+			id: 'status',
+			name: 'Status',
+			definitions: [PresetId.Battery],
+		},
+	]
+
+	self.setPresetDefinitions(structure, presets)
 }

@@ -1,7 +1,8 @@
 {
 	"name": "apc-ups",
-	"version": "1.1.0",
+	"version": "2.0.0",
 	"main": "dist/main.js",
+	"type": "module",
 	"scripts": {
 		"prepare": "husky",
 		"build": "rimraf dist && yarn build:main",
@@ -11,7 +12,10 @@
 		"lint:raw": "eslint",
 		"lint": "yarn lint:raw .",
 		"dist": "yarn companion-module-build",
-		"package": "rimraf dist && yarn build:main && yarn dist"
+		"package": "rimraf dist && yarn build:main && yarn dist",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage"
 	},
 	"license": "MIT",
 	"repository": {
@@ -19,20 +23,23 @@
 		"url": "git+https://github.com/bitfocus/companion-module-apc-ups.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.13.4",
+		"@companion-module/base": "~2.1.3",
 		"snmp-native": "^1.2.0"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^2.8.0",
-		"@types/node": "^22.19.1",
+		"@companion-module/tools": "^3.1.0",
+		"@types/node": "^26.6.2",
 		"@types/snmp-native": "^1.2.5",
-		"eslint": "^9.39.1",
+		"@vitest/coverage-v8": "5.0.1",
+		"eslint": "^10.11.0",
 		"husky": "^9.1.7",
-		"lint-staged": "^16.2.7",
-		"prettier": "^3.6.2",
-		"rimraf": "^6.1.2",
-		"typescript": "~5.9.3",
-		"typescript-eslint": "^8.47.0"
+		"lint-staged": "^17.5.1",
+		"prettier": "^3.9.9",
+		"rimraf": "^6.1.3",
+		"typescript": "~6.0.3",
+		"typescript-eslint": "^8.70.1",
+		"vite": "^8.3.0",
+		"vitest": "5.0.1"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
 	"lint-staged": {
@@ -44,8 +51,8 @@
 		]
 	},
 	"engines": {
-		"node": "^22.12",
+		"node": "^26.5",
 		"yarn": "^4.0.0"
 	},
-	"packageManager": "yarn@4.11.0"
+	"packageManager": "yarn@4.18.0"
 }

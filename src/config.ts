@@ -1,6 +1,7 @@
 import { Regex, type SomeCompanionConfigField } from '@companion-module/base'
 
-export interface DeviceConfig {
+// A type alias, not an interface: InstanceTypes requires config to satisfy JsonObject, and interfaces don't
+export type DeviceConfig = {
 	host: string
 	community: string
 	pullingTime: number
@@ -26,7 +27,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 		{
 			type: 'number',
 			id: 'pullingTime',
-			label: 'Set interval to pull data in msec',
+			label: 'Poll Interval (ms)',
 			width: 8,
 			min: 5000,
 			max: 86400000,

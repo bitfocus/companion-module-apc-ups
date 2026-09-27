@@ -69,11 +69,11 @@ export const upsOidDataTransforms = {
 export const UPS_OID_VARIABLE_NAMES = {
 	ups_type: 'UPS Type',
 	battery_capacity: 'Battery capacity (%)',
-	battery_runtime_remain: 'Battery runtime remain (S)',
+	battery_runtime_remain: 'Battery runtime remain (s)',
 	battery_temperature: 'Battery temperature (C)',
 	battery_replace: 'Battery replacement required',
 	battery_status: 'Battery status',
-	battery_time_on_battery: 'Time on battery (S)',
+	battery_time_on_battery: 'Time on battery (s)',
 	battery_voltage: 'Battery voltage (V)',
 	input_voltage: 'Input voltage (V)',
 	input_frequency: 'Input frequency (Hz)',

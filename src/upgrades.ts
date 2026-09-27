@@ -9,9 +9,9 @@ import type { DeviceConfig } from './config.js'
 
 function CommunityString(
 	_context: CompanionUpgradeContext<DeviceConfig>,
-	props: CompanionStaticUpgradeProps<DeviceConfig>,
-): CompanionStaticUpgradeResult<DeviceConfig> {
-	const result: CompanionStaticUpgradeResult<DeviceConfig> = {
+	props: CompanionStaticUpgradeProps<DeviceConfig, undefined>,
+): CompanionStaticUpgradeResult<DeviceConfig, undefined> {
+	const result: CompanionStaticUpgradeResult<DeviceConfig, undefined> = {
 		updatedActions: [],
 		updatedConfig: null,
 		updatedFeedbacks: [],
